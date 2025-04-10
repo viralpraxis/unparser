@@ -1,6 +1,6 @@
 Gem::Specification.new do |gem|
   gem.name        = 'unparser'
-  gem.version     = '0.7.0'
+  gem.version     = '0.8.0'
 
   gem.authors     = ['Markus Schirp']
   gem.email       = 'mbj@schirp-dso.com'
@@ -27,6 +27,7 @@ Gem::Specification.new do |gem|
 
   gem.add_dependency('diff-lcs', '~> 1.6')
   gem.add_dependency('parser',   '>= 3.3.0')
+  gem.add_dependency('prism', '>= 1.4') # '>= 1.5'
 
   gem.add_development_dependency('mutant',            '~> 0.13.0')
   gem.add_development_dependency('mutant-rspec',      '~> 0.13.0')
