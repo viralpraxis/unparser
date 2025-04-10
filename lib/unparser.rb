@@ -3,7 +3,6 @@
 require 'diff/lcs'
 require 'diff/lcs/hunk'
 require 'optparse'
-require 'parser/current'
 require 'set'
 
 require 'unparser/equalizer'
@@ -20,13 +19,27 @@ require 'unparser/anima/error'
 # Library namespace
 module Unparser
   # Unparser specific AST builder defaulting to modern AST format
-  class Builder < Parser::Builders::Default
-    modernize
+  if Gem::Version.new(RUBY_VERSION) <= '3.4'
+    require 'parser/current'
+    class Builder < Parser::Builders::Default
+      modernize
 
-    def initialize
-      super
+      def initialize
+        super
 
-      self.emit_file_line_as_literals = false
+        self.emit_file_line_as_literals = false
+      end
+    end
+  else
+    require 'prism'
+    class Builder < Prism::Translation::Parser::Builder
+      modernize
+
+      def initialize
+        super
+
+        self.emit_file_line_as_literals = false
+      end
     end
   end
 
@@ -203,7 +216,14 @@ module Unparser
   #
   # @api private
   def self.parser
-    Parser::CurrentRuby.new(Builder.new).tap do |parser|
+    parser_class =
+      if Gem::Version.new(RUBY_VERSION) <= '3.4'
+        Parser::CurrentRuby
+      else
+        Prism::Translation::ParserCurrent
+      end
+
+    parser_class.new(Builder.new).tap do |parser|
       parser.diagnostics.tap do |diagnostics|
         diagnostics.all_errors_are_fatal = true
       end
