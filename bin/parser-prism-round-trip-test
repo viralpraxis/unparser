@@ -22,7 +22,8 @@ module PrismParser
     'a\247b',
     '\xE3\xD3\x8B\xE3\x83\xBC\x83\xE3\x83\xE3\x82\xB3\xA3\x82\x99',
     'hello \u{fc}',
-    '# encoding: sjis'
+    '# encoding: sjis',
+    'private def'
   ].freeze
 
   PRISM_TODO = Set[
@@ -62,6 +63,7 @@ b\nar
         spanning_heredoc
         heredocs_with_fake_newlines
         heredocs_nested
+        leading_logical
       ].to_set { |file| "#{PARSER_PATH}/test/prism/fixtures-tmp/#{file}.txt" }
     end
 
